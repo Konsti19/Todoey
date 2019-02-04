@@ -12,12 +12,21 @@ class ToDoListViewController: UITableViewController {
 
     var itemArray = ["Buy apples","Buy milk","Buy fruits"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = defaults.array(forKey: "ToDoList") as? [String]{
+            itemArray = items
+        }
     }
 
     // TableView DataSource
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return itemArray.count
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -27,9 +36,7 @@ class ToDoListViewController: UITableViewController {
         return cell
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return itemArray.count
-    }
+ 
     
     
    
@@ -56,6 +63,7 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item!", style: .default) { (action) in
           
             self.itemArray.append(textfield.text!)
+            self.defaults.set(self.itemArray, forKey: "ToDoList")
             self.tableView.reloadData()
         }
         
